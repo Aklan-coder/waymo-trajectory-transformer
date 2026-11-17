@@ -1,0 +1,5 @@
+model,ADE,FDE,minADE@3,minFDE@3
+Constant velocity,1.414,3.849,,
+Transformer K=1,0.704,1.973,,
+Transformer K=3 (top-confidence),0.747,2.099,,
+Transformer K=3 (best of 3),,,0.409,1.097

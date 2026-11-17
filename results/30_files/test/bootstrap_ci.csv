@@ -1,0 +1,5 @@
+comparison,mean_diff_m,ci_low,ci_high
+ADE: CV - K1,0.709,0.689,0.731
+FDE: CV - K1,1.876,1.821,1.93
+ADE: K1 - K3top,-0.043,-0.049,-0.036
+FDE: K1 - K3top,-0.126,-0.143,-0.109

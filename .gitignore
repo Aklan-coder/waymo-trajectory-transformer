@@ -1,0 +1,12 @@
+# Large or generated files: keep out of git
+raw*/
+raw_tmp/
+data*/
+runs*/
+*.pt
+*.npz
+*.npy
+*.log
+__pycache__/
+.venv/
+venv/
