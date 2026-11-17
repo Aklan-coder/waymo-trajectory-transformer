@@ -25,7 +25,7 @@ waymo-trajectory-transformer/
 ├── tests/
 │   └── test_pipeline.py   # self-test, no download or GPU needed
 └── results/
-    └── 30_files/          # results of the 30-training-file run (tables, figures, training logs)
+    └── 1000_files/        # final results: tables, maneuver breakdown, bootstrap CIs, figures, training logs
 ```
 
 ## Setup
@@ -90,21 +90,53 @@ Training: AdamW (lr 3e-4, weight decay 1e-4), one-cycle schedule, batch 256,
 gradient clipping 1.0, seed 0. Loss: K=1 = ADE; K=3 = best-of-3 ADE + 0.5 × cross-entropy
 on which path was best. Best epoch chosen on validation; final scores on test.
 
-## Results so far (30 training files, test set of 12,700 vehicles)
+## Results (all 1000 training files, test set of 12,700 vehicles)
+
+Trained on all 1,000 Waymo training files (about 4.09 million vehicle samples) for 10 epochs
+on an NVIDIA RTX 6000 GPU (Chameleon Cloud). Best epoch chosen on validation (12,145 vehicles);
+all numbers below are on the separate test set.
 
 | Model | ADE (m) | FDE (m) | minADE@3 (m) | minFDE@3 (m) |
 |---|---|---|---|---|
 | Constant velocity | 1.414 | 3.849 | — | — |
-| Transformer K=1 | 0.704 | 1.973 | — | — |
-| Transformer K=3, top-confidence path | 0.747 | 2.099 | — | — |
-| Transformer K=3, best of 3 paths | — | — | 0.409 | 1.097 |
+| Transformer K=1 | 0.650 | 1.830 | — | — |
+| Transformer K=3, top-confidence path | 0.683 | 1.917 | — | — |
+| Transformer K=3, best of 3 paths | — | — | 0.364 | 0.977 |
 
-Full tables, maneuver breakdown, bootstrap intervals and figures: `results/30_files/`.
+**Paired bootstrap (2,000 resamples), 95% confidence intervals**
+
+| Comparison | Mean difference (m) | 95% CI |
+|---|---|---|
+| ADE: constant velocity − K=1 | 0.763 | [0.743, 0.785] |
+| FDE: constant velocity − K=1 | 2.019 | [1.963, 2.073] |
+| ADE: K=1 − K=3 top path | −0.033 | [−0.038, −0.028] |
+| FDE: K=1 − K=3 top path | −0.087 | [−0.101, −0.073] |
+
+The Transformer cuts constant-velocity error by about 54% (ADE) and 52% (FDE). The K=3 model's
+single most-confident path is slightly worse than K=1, but the best of its 3 paths is much better
+(minADE 0.364 m), showing it captures several plausible futures.
+
+**By maneuver (test set)**
+
+| Maneuver | n | CV ADE | K=1 ADE | K=3 minADE | CV FDE | K=1 FDE | K=3 minFDE |
+|---|---|---|---|---|---|---|---|
+| Straight | 7,484 | 1.390 | 0.740 | 0.406 | 3.752 | 2.079 | 1.078 |
+| Braking | 1,548 | 2.517 | 0.847 | 0.433 | 6.855 | 2.235 | 1.084 |
+| Left turn | 583 | 3.313 | 0.954 | 0.698 | 9.241 | 2.808 | 2.057 |
+| Right turn | 479 | 2.985 | 1.158 | 0.784 | 8.358 | 3.418 | 2.370 |
+| Slow / stationary | 2,606 | 0.113 | 0.115 | 0.048 | 0.306 | 0.362 | 0.125 |
+
+The biggest gains over constant velocity are on turns and braking, where a straight-line guess fails.
+
+**Figures** (in `results/1000_files/`)
+
+| | |
+|---|---|
+| ![Single-path predictions](results/1000_files/fig1_single_overlays.png) | ![Multimodal predictions](results/1000_files/fig2_multimodal.png) |
+| ![Error by maneuver](results/1000_files/fig3_error_bars.png) | ![Training curves](results/1000_files/fig4_loss_curves.png) |
 
 ## Notes
 
-- Report the numbers and figures in `results/30_files/test/`. The `validation/` figures were
-  made before the final figure-selection fix; its tables are correct.
 - The LSTM (Pallavi) should be evaluated on the same `data_N/test` files, with predictions
   saved as an array of shape (number of test samples, 30, 2) in alphabetical file order.
 - Data use follows the Waymo Dataset License Agreement for Non-Commercial Use.
