@@ -1,4 +1,4 @@
-"""Score constant velocity (and the LSTM, if --ckpt is given) on Abdulahi's arrays.
+"""Score constant velocity (and the LSTM, if --ckpt is given) 
 
     # Step 1, no model needed: check your evaluation reproduces his baseline (test 1.414 / 3.849)
     python evaluate_test_arrays.py --test data/test.npz --out results/cv_check
