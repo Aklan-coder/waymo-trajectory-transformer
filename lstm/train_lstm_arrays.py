@@ -1,4 +1,4 @@
-"""Train the LSTM on Abdulahi's preprocessed arrays (inputs [N,11,6], targets [N,30,2]).
+"""Train the LSTM on (inputs [N,11,6], targets [N,30,2]).
 
     python train_lstm_arrays.py --train data/train.npz --val data/val.npz --out runs/lstm_a
     # or separate files:
