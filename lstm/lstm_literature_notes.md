@@ -1,6 +1,6 @@
 # LSTM trajectory prediction: literature notes (Pallavi's part)
 
-Status: I read the abstracts (and for Schöller et al. the abstract plus summary) of the papers below, not the full texts. Before citing a specific number or design detail in the report, open the paper and check it.
+Status: I read the abstracts (and for Schöller et al. the abstract plus summary) of the papers below, not the full texts. Before citing a specific number or design detail in the report.
 
 ## What to say in the report (3 sentences)
 LSTMs became the standard neural baseline for vehicle trajectory prediction around 2018, mostly on the NGSIM highway data: encode the recent motion with an LSTM, then decode future positions, sometimes with extra context about neighbours or the maneuver. Later work moved to multimodal outputs, because one past can lead to several futures. A constant-velocity model must still be reported, since it is surprisingly hard to beat on short horizons (Schöller et al.).
