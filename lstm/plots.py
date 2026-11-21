@@ -1,4 +1,4 @@
-"""Figures for the report. Colors follow the course-wide convention so Pallavi's and Abdullah's
+"""Figures for the report. Colors follow the course-wide convention both of us
 figures look like one set (colors belong to the model, not to its rank):
 
     ground truth / history : near-black ink     LSTM : blue      constant velocity : orange
